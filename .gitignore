@@ -1,4 +1,8 @@
-# Prerequisites
+# .gitignore
+# Originally By: gskapoor @ GitHub
+# Edited By: DrkWithT @ GitHub
+
+# Prerequisites (if any)
 *.d
 
 # Object files
