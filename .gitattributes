@@ -1,0 +1,12 @@
+# .gitattributes
+# Configures text endlines for now.
+# By: DrkWithT
+
+# Auto escape newlines for any system!
+text=auto
+
+# Text files
+*.md text
+./makefile text
+src/*.c text
+headers/*.h text
