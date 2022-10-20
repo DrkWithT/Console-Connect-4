@@ -2,6 +2,9 @@
 # Originally By: gskapoor @ GitHub
 # Edited By: DrkWithT @ GitHub
 
+# Other:
+.vscode
+
 # Prerequisites (if any)
 *.d
 
