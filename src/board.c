@@ -71,6 +71,16 @@ const char *Board_getRawData(const Board *self)
   return self->cell_data;
 }
 
+int Board_getRowOfMove(const Board *self)
+{
+  return self->last_row;
+}
+
+int Board_getColOfMove(const Board *self)
+{
+  return self->last_col;
+}
+
 // TODO: rewrite loop logic!!
 _Bool Board_putPiece(Board *self, int col_idx, char c)
 {
@@ -109,17 +119,106 @@ void Board_clearCells(Board *self)
   memset(self->cell_data, BLANK_CELL, self->cell_count);
 }
 
+_Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
+{
+  int count = 0;          // match count per vertical check
+
+  char prev = BLANK_CELL; // previous cell for match checking
+  int tmp_idx = col_idx + row_idx * self->cols;
+
+  // check above vertical
+  while (tmp_idx > 0)
+  {
+    char tmp = self->cell_data[tmp_idx];
+
+    if (tmp == prev)
+      count++;
+    else
+      count = 0;
+
+    if (count >= 3)
+      goto endChecks; // short circuit if 1st check is a win!
+
+    tmp_idx -= self->cols;
+    prev = tmp;
+  }
+
+  prev = BLANK_CELL;
+  tmp_idx = col_idx + row_idx * self->cols;
+
+  while (tmp_idx < self->cell_count)
+  {
+    char tmp = self->cell_data[tmp_idx];
+
+    if (tmp == prev)
+      count++;
+    else
+      count = 0;
+
+    if (count >= 3)
+      goto endChecks;
+
+    tmp_idx += self->cols;
+    prev = tmp;
+  }
+  
+endChecks:
+  return count >= 3;
+}
+
+_Bool static Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx)
+{
+  int count = 0;
+
+  char prev = BLANK_CELL;
+  int tmp_idx = col_idx + row_idx * self->cols;
+  int lower_end = tmp_idx - self->cols + 1;
+  
+  while (tmp_idx >= lower_end) // lower bound of horizontal check: "start of row" index!
+  {
+    char tmp = self->cell_data[tmp_idx];
+
+    if (tmp == prev)
+      count++;
+    else
+      count = 0;
+
+    if (count >= 3)
+      goto endChecks;
+    
+    tmp_idx--;
+    prev = tmp;
+  }
+
+  prev = BLANK_CELL;
+  tmp_idx = col_idx + row_idx * self->cols;
+  
+  while ((tmp_idx + 1) % self->cols != 0) // upper bound of horizontal check: "end of row" index!
+  {
+    char tmp = self->cell_data[tmp_idx];
+
+    if (tmp == prev)
+      count++;
+    else
+      count = 0;
+
+    if (count >= 3)
+      goto endChecks;
+    
+    tmp_idx--;
+    prev = tmp;
+  }
+  
+endChecks:
+  return count >= 3;
+}
+
+_Bool static Board_checkDiagonalsAt(Board *self, int row_idx, int col_idx)
+{
+  return false; // todo
+}
+
 _Bool Board_hasWinner(Board *self, int row_idx, int col_idx)
 {
-  // check most recently placed piece for a 4-streak...
-  int count = 0;
-  _Bool has_win_turn = false;
-
-  // 1. check verticals
-
-  // 2. check horizontals
-
-  // 3. check diagonals
-
-  return has_win_turn;
+  return Board_checkVerticalsAt(self, row_idx, col_idx) || 0 || 0; // todo: put horizontal and diagonal checker calls here!
 }
