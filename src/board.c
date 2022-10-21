@@ -35,6 +35,9 @@ Board *Board_Constr(int rowc, int colc)
     new_board->cell_count = temp_rows * temp_cols;
     new_board->cell_data = malloc(new_board->cell_count + 1);
     memset(new_board->cell_data, BLANK_CELL, new_board->cell_count);
+
+    new_board->last_row = 0;
+    new_board->last_col = 0;
   }
 
   return new_board;
@@ -48,6 +51,8 @@ void Board_Destr(Board *self)
     self->cell_count = 0;
     self->cols = 0;
     self->rows = 0;
+    self->last_col = 0;
+    self->last_row = 0;
   }
 }
 
@@ -66,22 +71,29 @@ const char *Board_getRawData(const Board *self)
   return self->cell_data;
 }
 
+// TODO: rewrite loop logic!!
 _Bool Board_putPiece(Board *self, int col_idx, char c)
 {
   _Bool col_valid = col_idx >= 0 && col_idx < self->cols; // if the column dropped into is valid
   int drop_count = 0;                                     // how much the piece drops... > 0 if we have a vacant column
+  int data_idx = 0;
 
   if (col_valid)
   {
-    for (int i = 0; i < self->cell_count; i += self->cols)
+    for (int i = 0; i < self->cell_count; i++)
     {
-      char testc = self->cell_data[col_idx];
-      int slot_idx = i;
+      data_idx = col_idx + i * self->cols;
+      char testc = self->cell_data[data_idx];
 
       if (testc != BLANK_CELL)
       {
-        slot_idx -= self->cols;
-        self->cell_data[slot_idx] = c;
+        if (drop_count > 0)
+        {
+          data_idx -= self->cols; // backtrack to space above filled cell to place new piece
+          self->cell_data[data_idx] = c;
+          self->last_col = col_idx;
+          self->last_row = 0;
+        }
         break;
       }
 
@@ -89,7 +101,7 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
     }
   }
 
-  return col_valid && drop_count;
+  return col_valid && drop_count > 0;
 }
 
 void Board_clearCells(Board *self)
@@ -97,12 +109,17 @@ void Board_clearCells(Board *self)
   memset(self->cell_data, BLANK_CELL, self->cell_count);
 }
 
-char Board_findWinner(Board *self)
+_Bool Board_hasWinner(Board *self, int row_idx, int col_idx)
 {
-  char winning_piece = BLANK_CELL;
-  int match_count = 0;
+  // check most recently placed piece for a 4-streak...
+  int count = 0;
+  _Bool has_win_turn = false;
 
-  // todo: implement logic: track "match scores" per row, column, and diagonals (rows below 3rd row from top)!
+  // 1. check verticals
 
-  return winning_piece;
+  // 2. check horizontals
+
+  // 3. check diagonals
+
+  return has_win_turn;
 }
