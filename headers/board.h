@@ -21,6 +21,12 @@ typedef struct board_object
   int cols;         // Column count
   int cell_count;   // Row * Column counts
   char *cell_data;  // A 1-D array storing all row data, and it is rows x cols in size: [r1, r2... r_n]
+
+  // last placement position: row
+  int last_row;
+
+  // last placement position: column
+  int last_col;
 }Board;
 
 Board *Board_Constr(int rowc, int colc);
@@ -37,6 +43,6 @@ _Bool Board_putPiece(Board *self, int col_idx, char c);
 
 void Board_clearCells(Board *self);
 
-char Board_findWinner(Board *self);
+_Bool Board_hasWinner(Board *self, int row_idx, int col_idx);
 
 #endif
