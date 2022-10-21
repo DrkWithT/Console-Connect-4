@@ -39,9 +39,19 @@ int Board_getCellCount(Board *self);
 
 const char *Board_getRawData(const Board *self);
 
+int Board_getRowOfMove(const Board *self);
+
+int Board_getColOfMove(const Board *self);
+
 _Bool Board_putPiece(Board *self, int col_idx, char c);
 
 void Board_clearCells(Board *self);
+
+_Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx);
+
+_Bool static Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx);
+
+_Bool static Board_checkDiagonalsAt(Board *self, int row_idx, int col_idx);
 
 _Bool Board_hasWinner(Board *self, int row_idx, int col_idx);
 
