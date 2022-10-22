@@ -39,6 +39,7 @@ Board *Board_Constr(int rowc, int colc)
 
     new_board->last_row = 0;
     new_board->last_col = 0;
+    new_board->fill_count = 0;
   }
 
   return new_board;
@@ -49,11 +50,15 @@ void Board_Destr(Board *self)
   if (self != NULL)
   {
     free(self->cell_data);
+    self->cell_data = NULL;
+
     self->cell_count = 0;
     self->cols = 0;
     self->rows = 0;
+    
     self->last_col = 0;
     self->last_row = 0;
+    self->fill_count = 0;
   }
 }
 
@@ -65,6 +70,11 @@ _Bool Board_canUse(const Board *self)
 int Board_getCellCount(Board *self)
 {
   return self->cell_count;
+}
+
+_Bool Board_isFull(const Board *self)
+{
+  return self->fill_count == self->cell_count;
 }
 
 const char *Board_getRawData(const Board *self)
@@ -102,11 +112,18 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
         if (drop_count > 0)
         {
           data_idx -= self->cols; // backtrack to space above filled cell to place new piece
-          self->cell_data[data_idx] = c;
-          self->last_col = col_idx;
-          self->last_row = 0;
+
+          if (data_idx >= 0 && data_idx < self->cell_count) // check if backtrack is still in bounds
+          {
+            self->cell_data[data_idx] = c;
+            self->last_col = col_idx;
+            self->last_row = 0;
+
+            self->fill_count++; // on successful move: update fill count!
+          }
         }
-        break;
+
+        return col_valid && drop_count > 0;
       }
 
       drop_count++; // track dropping depth of piece
@@ -115,10 +132,14 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
     i--; // backtrack above bottom row idx just outside bounds
     data_idx = col_idx + i * self->cols;
     
-    // final placing attempt: column was entirely empty with the bottom empty too...
+    // final placing attempt if column was all empty...
     if (self->cell_data[data_idx] == BLANK_CELL) {
       drop_count = i;
       self->cell_data[data_idx] = c;
+      self->last_col = col_idx;
+      self->last_row = i;
+
+      self->fill_count++;
     }
   }
 
@@ -128,6 +149,7 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
 void Board_clearCells(Board *self)
 {
   memset(self->cell_data, BLANK_CELL, self->cell_count);
+  self->cell_data[self->cell_count] = '\0'; // put terminator char
 }
 
 _Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
