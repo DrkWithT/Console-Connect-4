@@ -2,6 +2,7 @@
  * @file board.c
  * @author Derek Tan (DrkWithT @ GitHub)
  * @brief Implements the Board object.
+ * @note The win checking functions rely on the most recent piece placement location by some player.
  * @version 0.1
  * @date 2022-10-19
  */
@@ -90,7 +91,8 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
 
   if (col_valid)
   {
-    for (int i = 0; i < self->cell_count; i++)
+    int i = 0;
+    for (; i < self->rows; i++)
     {
       data_idx = col_idx + i * self->cols;
       char testc = self->cell_data[data_idx];
@@ -109,6 +111,15 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
 
       drop_count++; // track dropping depth of piece
     }
+
+    i--; // backtrack above bottom row idx just outside bounds
+    data_idx = col_idx + i * self->cols;
+    
+    // final placing attempt: column was entirely empty with the bottom empty too...
+    if (self->cell_data[data_idx] == BLANK_CELL) {
+      drop_count = i;
+      self->cell_data[data_idx] = c;
+    }
   }
 
   return col_valid && drop_count > 0;
@@ -121,7 +132,7 @@ void Board_clearCells(Board *self)
 
 _Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
 {
-  int count = 0;          // match count per vertical check
+  int count = 0; // match count per vertical check
 
   char prev = BLANK_CELL; // previous cell for match checking
   int tmp_idx = col_idx + row_idx * self->cols;
@@ -143,6 +154,7 @@ _Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
     prev = tmp;
   }
 
+  count = 0;
   prev = BLANK_CELL;
   tmp_idx = col_idx + row_idx * self->cols;
 
@@ -150,7 +162,7 @@ _Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
   {
     char tmp = self->cell_data[tmp_idx];
 
-    if (tmp == prev)
+    if (tmp != BLANK_CELL && tmp == prev)
       count++;
     else
       count = 0;
@@ -169,16 +181,17 @@ endChecks:
 _Bool static Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx)
 {
   int count = 0;
-
   char prev = BLANK_CELL;
-  int tmp_idx = col_idx + row_idx * self->cols;
+  int location = col_idx + row_idx * self->cols; // pre-computed location of most recent piece placement
+  int tmp_idx = location;
   int lower_end = tmp_idx - self->cols + 1;
   
-  while (tmp_idx >= lower_end) // lower bound of horizontal check: "start of row" index!
+  // Goes to lower bound of horizontal check: "start of row" index!
+  while (tmp_idx >= lower_end)
   {
     char tmp = self->cell_data[tmp_idx];
 
-    if (tmp == prev)
+    if (tmp != BLANK_CELL && tmp == prev)
       count++;
     else
       count = 0;
@@ -190,14 +203,16 @@ _Bool static Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx)
     prev = tmp;
   }
 
+  count = 0;
   prev = BLANK_CELL;
-  tmp_idx = col_idx + row_idx * self->cols;
+  tmp_idx = location;
   
-  while ((tmp_idx + 1) % self->cols != 0) // upper bound of horizontal check: "end of row" index!
+  // Goes to upper bound of the horizontal check: "end of row" index!
+  while ((tmp_idx + 1) % self->cols != 0)
   {
     char tmp = self->cell_data[tmp_idx];
 
-    if (tmp == prev)
+    if (tmp != BLANK_CELL && tmp == prev)
       count++;
     else
       count = 0;
@@ -213,12 +228,53 @@ endChecks:
   return count >= 3;
 }
 
-_Bool static Board_checkDiagonalsAt(Board *self, int row_idx, int col_idx)
+_Bool static Board_checkDiagonalFrom(Board *self, int row_idx, int col_idx, int row_step, int col_step)
 {
-  return false; // todo
+  int count = 0;           // count of matched cells by diagonal
+  char prev = BLANK_CELL;  // previous tracked cell's data
+  int location = col_idx + row_idx * self->cols;
+
+  int tmp_idx = location;  // cell data access index
+  int temp_col = col_idx;  // equivalent column index
+  int temp_row = row_idx;  // equivalent row index
+
+  // check a diagonal by direction components...
+  while (tmp_idx > 0)
+  {
+    char tmp = self->cell_data[tmp_idx];
+
+    if (tmp != BLANK_CELL && tmp == prev)
+      count++;
+    else
+      count = 0;
+
+    if (count >= 3)
+      break;
+
+    // move selection to next, possible cell location
+    temp_col += col_step;
+    temp_row += row_step;
+
+    // check if cell location is in bounds: end scan if it's not!
+    if (temp_col < 0 || temp_col >= self->cols || temp_row >= self->rows || temp_row < 0)
+    {
+      count = 0;
+      break;
+    }
+
+    tmp_idx = temp_col + temp_row * self->cols;
+    prev = tmp;
+  }
+
+  return count >= 3; // todo
 }
 
 _Bool Board_hasWinner(Board *self, int row_idx, int col_idx)
 {
-  return Board_checkVerticalsAt(self, row_idx, col_idx) || 0 || 0; // todo: put horizontal and diagonal checker calls here!
+  return Board_checkVerticalsAt(self, row_idx, col_idx)
+  || Board_checkHorizontalsAt(self, row_idx, col_idx)
+  || Board_checkDiagonalFrom(self, row_idx, col_idx, -1, -1) // top left diagonal
+  || Board_checkDiagonalFrom(self, row_idx, col_idx, -1, 1)  // top right diagonal
+  || Board_checkDiagonalFrom(self, row_idx, col_idx, 1, 1)   // bottom right diagonal
+  || Board_checkDiagonalFrom(self, row_idx, col_idx, 1, -1); // bottom left diagonal
 }
