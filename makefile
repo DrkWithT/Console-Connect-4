@@ -16,7 +16,7 @@ SRCS := $(shell find $(SRC_DIR) -name '*.c')
 OBJS := $(patsubst $(SRC_DIR)/%.c,%.o,$(SRCS))
 
 # Executable
-EXE := $(BIN_DIR)connect4
+EXE := $(BIN_DIR)/connect4
 
 # Directives
 vpath %.h $(HDR_DIR) # search headers/ for C definition files.
