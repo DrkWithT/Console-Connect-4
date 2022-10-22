@@ -57,9 +57,9 @@ _Bool Board_putPiece(Board *self, int col_idx, char c);
 
 void Board_clearCells(Board *self);
 
-static _Bool Board_checkVerticalsAt(Board *self, int row_idx, int col_idx);
+_Bool Board_checkVerticalsAt(Board *self, int row_idx, int col_idx);
 
-static _Bool Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx);
+_Bool Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx);
 
 /**
  * @brief This is a generalized function that checks for any 4-streak of a player piece along a diagonal. The diagonal is specified with step components, like 2D vector x-component or y-component.
@@ -71,7 +71,7 @@ static _Bool Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx);
  * @param col_step Step magnitude to next col from position.
  * @return _Bool If the diagonal has a win.
  */
-static _Bool Board_checkDiagonalFrom(Board *self, int row_idx, int col_idx, int row_step, int col_step);
+_Bool Board_checkDiagonalFrom(Board *self, int row_idx, int col_idx, int row_step, int col_step);
 
 _Bool Board_hasWinner(Board *self, int row_idx, int col_idx);
 
