@@ -152,7 +152,7 @@ void Board_clearCells(Board *self)
   self->cell_data[self->cell_count] = '\0'; // put terminator char
 }
 
-_Bool static Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
+static _Bool Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
 {
   int count = 0; // match count per vertical check
 
@@ -200,7 +200,7 @@ endChecks:
   return count >= 3;
 }
 
-_Bool static Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx)
+static _Bool Board_checkHorizontalsAt(Board *self, int row_idx, int col_idx)
 {
   int count = 0;
   char prev = BLANK_CELL;
@@ -250,7 +250,7 @@ endChecks:
   return count >= 3;
 }
 
-_Bool static Board_checkDiagonalFrom(Board *self, int row_idx, int col_idx, int row_step, int col_step)
+static _Bool Board_checkDiagonalFrom(Board *self, int row_idx, int col_idx, int row_step, int col_step)
 {
   int count = 0;           // count of matched cells by diagonal
   char prev = BLANK_CELL;  // previous tracked cell's data
