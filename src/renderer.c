@@ -80,7 +80,9 @@ void Renderer_drawAll(const Renderer *self)
     }
 
     // render on new row after passing a row's span: cols per row
-    if (cell_idx % self->col_count == 0)
+    if (cell_idx != 0 && cell_idx % self->col_count == 0)
       printf("\n");
   }
+  
+  printf("\n");
 }
