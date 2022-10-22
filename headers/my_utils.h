@@ -15,8 +15,16 @@
 // Player 2 is blue
 #define P2_CELL_COLOR 34
 
+/**
+ * @brief Sets the terminal color to a color by ANSI code.
+ * 
+ * @param ansi_color The color code.
+ */
 void console_set_color(int ansi_color);
 
+/**
+ * @brief Resets the terminal printing mode, clearing the color too.
+ */
 void console_clear_color();
 
 #endif
