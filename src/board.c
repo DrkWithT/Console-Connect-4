@@ -1,9 +1,8 @@
 /**
  * @file board.c
  * @author Derek Tan (DrkWithT @ GitHub)
- * @brief Implements the Board object.
+ * @brief Implements the Board functions.
  * @note The win checking functions rely on the most recent piece placement location by some player.
- * @version 0.1
  * @date 2022-10-19
  */
 
@@ -35,7 +34,9 @@ Board *Board_Constr(int rowc, int colc)
     new_board->cols = temp_cols;
     new_board->cell_count = temp_rows * temp_cols;
     new_board->cell_data = malloc(new_board->cell_count + 1);
-    memset(new_board->cell_data, BLANK_CELL, new_board->cell_count);
+
+    if (Board_canUse(new_board))
+      memset(new_board->cell_data, BLANK_CELL, new_board->cell_count);
 
     new_board->last_row = 0;
     new_board->last_col = 0;
@@ -49,9 +50,12 @@ void Board_Destr(Board *self)
 {
   if (self != NULL)
   {
-    free(self->cell_data);
-    self->cell_data = NULL;
-
+    if (Board_canUse(self))
+    {
+      free(self->cell_data);
+      self->cell_data = NULL;
+    }
+    
     self->cell_count = 0;
     self->cols = 0;
     self->rows = 0;
