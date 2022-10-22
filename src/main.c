@@ -1,51 +1,76 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "renderer.h"
+#include "board.h"
 
-/*  Here is the current plan for the connect for program:
- *
- *  There will be a display, with capital O having an empty space, and o using a space.
- *
- *  Here is a sample board: 
- *  
- *  OOOOOOO
- *  OOOOOOO
- *  ooOOOoO
- *  oOOOOoO
- *  
- *
+/**
+ * @file main.c
+ * @brief Driver code for my Connect 4 fork. :)
+ * @authors DrkWithT (Forker), gskapoor (Original)
  */
 
-// Sets up the board with 42 'empty' slots
-// uses chars for ease of use as well as for
-// the 1 byte memory size
-char* init_board(){
-  char* board = malloc(sizeof(char) * (6 * 7));
-  memset(board, 'X', 42);
+/**
+ * x is an empty cell, O is for player 1, o is for player 2.
+ * 
+ * Here is a sample board:
+ * xxxxxxx
+ * xxxxxxx
+ * xxOoxxx
+ * oooOOox
+ */
 
-}
+static Board *Game_Board = NULL;
+static Renderer *Game_Drawer;
 
-// Prints out board (by character)
-// Currently there is no feature to implement
-// different colored boards
-void print_board(char* board){
-  for (int i = 0; i < 42; i++){
-    printf("%c", board[i]);
+_Bool Game_Initialize()
+{
+  Game_Board = Board_Constr(DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS);
 
-    if (i % 7 == 0){
-      printf("\n");
-    }
-  }
-}
-
-int main(){
-  printf("Hello world\n");
-
-  // Time to make the board
+  if (!Game_Board)
+    return false;
   
-  init_board();
+  Game_Drawer = Renderer_Constr(Game_Board);
 
+  if (!Game_Drawer)
+    return false;
 
+  return true;
+}
 
+void Game_Cleanup()
+{
+  puts("Cleanup Objects...");
+  Renderer_Destr(Game_Drawer);
+  Board_Destr(Game_Board);
+}
+
+int main()
+{
+  // Initialize game variables.
+  _Bool turn_is_player1 = true;
+  char game_piece = PLAYER_1_PIECE;
+  char game_winner = BLANK_CELL;
+  int chosen_column = 0;
+
+  // Initialize special objects and setup exit handler in case.
+  if (!Game_Initialize())
+  {
+    printf("Failed to initialize game from allocation error.\n");
+    return 1;
+  }
+  else
+  {
+    atexit(Game_Cleanup);
+  }
+
+  // Run loop with Game calls: try out render function!
+  while (1)
+  {
+    Renderer_drawAll(Game_Drawer);
+    break; // todo: replace with full-board and winner checks for breaking the loop!
+  }
+
+  // todo: Print winner!
+
+  // Destroy game objects.
+  Game_Cleanup();
   return 0;
 }
