@@ -45,10 +45,10 @@ void Game_Cleanup()
 int main()
 {
   // Initialize game variables.
-  _Bool turn_is_player1 = true;
-  char game_piece = PLAYER_1_PIECE;
-  char game_winner = BLANK_CELL;
-  int chosen_column = 0;
+  // _Bool turn_is_player1 = true;
+  // char game_piece = PLAYER_1_PIECE;
+  // char game_winner = BLANK_CELL;
+  // int chosen_column = 0;
 
   // Initialize special objects and setup exit handler in case.
   if (!Game_Initialize())
@@ -58,7 +58,7 @@ int main()
   }
   else
   {
-    atexit(Game_Cleanup);
+    atexit(Game_Cleanup); // This function will be called when the game ends!
   }
 
   // Run loop with Game calls: try out render function!
@@ -69,8 +69,5 @@ int main()
   }
 
   // todo: Print winner!
-
-  // Destroy game objects.
-  Game_Cleanup();
   return 0;
 }
