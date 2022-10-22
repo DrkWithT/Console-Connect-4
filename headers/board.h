@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define DEFAULT_BOARD_ROWS 6
-#define DEFAULT_BOARD_COLS 6
+#define DEFAULT_BOARD_COLS 7
 
 #define PLAYER_1_PIECE 'o'
 #define PLAYER_2_PIECE 'O'
@@ -22,11 +22,11 @@ typedef struct board_object
   int cell_count;   // Row * Column counts
   char *cell_data;  // A 1-D array storing all row data, and it is rows x cols in size: [r1, r2... r_n]
 
-  // last placement position: row
-  int last_row;
+  int last_row; // last placement position: row
 
-  // last placement position: column
-  int last_col;
+  int last_col; // last placement position: column
+
+  int fill_count; // filled cell count
 }Board;
 
 Board *Board_Constr(int rowc, int colc);
@@ -36,6 +36,8 @@ void Board_Destr(Board *self);
 _Bool Board_canUse(const Board *self);
 
 int Board_getCellCount(Board *self);
+
+_Bool Board_isFull(const Board *self);
 
 const char *Board_getRawData(const Board *self);
 
