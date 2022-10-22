@@ -9,6 +9,10 @@
 // ANSI CTRL for defaulting color
 #define RESET_COLOR_MODE "\033[0m"
 
+#define CLEAR_SCR_SEQ "\033[2J;1;1H\033[0m"
+
+#define RESET_CUR_SEQ "\033[1;1H\033[0m"
+
 // Player 1 is red
 #define P1_CELL_COLOR 31
 
@@ -26,5 +30,10 @@ void console_set_color(int ansi_color);
  * @brief Resets the terminal printing mode, clearing the color too.
  */
 void console_clear_color();
+
+/**
+ * @brief Clears all text on the terminal screen.
+ */
+void console_clear_all();
 
 #endif
