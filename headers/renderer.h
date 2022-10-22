@@ -6,15 +6,17 @@
 
 typedef struct renderer_object
 {
-  int row_count; // board row count
   int col_count; // board column count
   const char *board_data_ptr; // indirect ptr to read board data
+  int cell_count; // count of board data's cells
 } Renderer;
 
 Renderer *Renderer_Constr(Board *board);
 
 void Renderer_Destr(Renderer *self);
 
-void Renderer_drawAll();
+_Bool Renderer_canUse(const Renderer *self);
+
+void Renderer_drawAll(const Renderer *self);
 
 #endif
