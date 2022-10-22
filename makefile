@@ -19,7 +19,7 @@ OBJS := $(patsubst $(SRC_DIR)/%.c,%.o,$(SRCS))
 EXE := $(BIN_DIR)/connect4
 
 # Directives
-vpath %.h $(HDR_DIR) # search headers/ for C definition files.
+vpath %.c $(SRC_DIR) # search src/ for all C implementation code.
 
 .PHONY: all listfiles clean
 
@@ -36,7 +36,7 @@ $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $< -I$(HDR_DIR)
 
 clean:
 	rm -f $(EXE) *.o
