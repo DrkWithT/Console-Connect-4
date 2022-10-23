@@ -51,6 +51,8 @@ _Bool Renderer_canUse(const Renderer *self)
 
 void Renderer_drawAll(const Renderer *self)
 {
+  console_clear_all(); // erase any previous text!
+
   char prev_c = BLANK_CELL;
   int row_count = 0;
 
