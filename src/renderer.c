@@ -91,6 +91,8 @@ void Renderer_drawAll(const Renderer *self)
       printf("%c ", c);
       row_count++;
     }
+
+    prev_c = c;
   }
   
   printf("\n");
