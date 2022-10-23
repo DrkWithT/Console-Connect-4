@@ -77,17 +77,16 @@ _Bool Game_Validate_Input(int col_num)
   return col_num >= 0 && col_num < Board_getCols(Game_Board);
 }
 
-void Game_Say_Winner(char player_piece)
+void Game_Say_Winner(int player_num)
 {
-  switch (player_piece)
+  switch (player_num)
   {
-  case PLAYER_1_PIECE:
+  case 1:
     puts("Player 1 won.");
     break;
-  case PLAYER_2_PIECE:
+  case 2:
     puts("Player 2 won.");
     break;
-  case BLANK_CELL:
   default:
     puts("Tie!");
     break;
@@ -99,7 +98,6 @@ int main()
   // Initialize game variables.
   int player_number = 1;
   char game_piece = PLAYER_1_PIECE;
-  char game_winner = BLANK_CELL;
   int chosen_column = 0;
   int move_row = 0;
   int move_col = 0;
@@ -128,23 +126,24 @@ int main()
 
     if (Game_Validate_Input(chosen_column))
     {
-      Board_putPiece(Game_Board, chosen_column, game_piece);
+      _Bool move_ok = Board_putPiece(Game_Board, chosen_column, game_piece);
       move_row = Board_getRowOfMove(Game_Board);
       move_col = Board_getColOfMove(Game_Board);
+
+      if (!move_ok)
+      {
+        puts("This column is full!");
+        break;
+      }
     }
     else
     {
-      game_winner = BLANK_CELL;
+      player_number = -1;
       break; // treat invalid cols as quitting!
     }
 
     if (Board_hasWinner(Game_Board, move_row, move_col))
-    {
-      game_winner = game_piece;
       break;
-    }
-    else
-      game_winner = BLANK_CELL;
 
     // Toggle current player and piece.
     if (player_number == 1)
@@ -159,7 +158,7 @@ int main()
     }
   }
 
-  Game_Say_Winner(game_winner);
+  Game_Say_Winner(player_number);
 
   return 0;
 }
