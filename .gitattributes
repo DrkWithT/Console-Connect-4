@@ -10,3 +10,7 @@ text=auto
 ./makefile text
 src/*.c text
 headers/*.h text
+
+# Image files
+./pics/*.jpg binary
+./pics/*.png binary
