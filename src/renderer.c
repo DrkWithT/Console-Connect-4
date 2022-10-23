@@ -52,6 +52,7 @@ _Bool Renderer_canUse(const Renderer *self)
 void Renderer_drawAll(const Renderer *self)
 {
   char prev_c = BLANK_CELL;
+  int row_count = 0;
 
   for (int cell_idx = 0; cell_idx < self->cell_count; cell_idx++)
   {
@@ -59,9 +60,7 @@ void Renderer_drawAll(const Renderer *self)
 
     // Moderate Optimization: do not change color mode if last and current chars match!
     // We should not interrupt the terminal with CTRL sequences for each cell char!
-    if (c == prev_c)
-      printf("%c", c);
-    else
+    if (c != prev_c)
     {
       // If the last and current cells differ: switch color mode.
       switch (c)
@@ -80,8 +79,16 @@ void Renderer_drawAll(const Renderer *self)
     }
 
     // render on new row after passing a row's span: cols per row
-    if (cell_idx != 0 && cell_idx % self->col_count == 0)
-      printf("\n");
+    if (cell_idx != 0 && row_count == self->col_count - 1)
+    {
+      printf("%c\n", c);
+      row_count = 0;
+    }
+    else
+    {
+      printf("%c ", c);
+      row_count++;
+    }
   }
   
   printf("\n");
