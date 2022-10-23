@@ -42,13 +42,31 @@ void Game_Cleanup()
   Board_Destr(Game_Board);
 }
 
+_Bool Game_Intro()
+{
+  console_set_color(C4_INFO_COLOR);
+  puts("Connect 4:");
+  puts("Player 1 is 'o'. Player 2 is 'O'. Empty cells are 'x'.");
+  puts("For each turn, choose a column to drop a piece.");
+  puts("To win, one of you should match 4 of your piece, diagonal too.");
+  console_clear_color();
+
+  printf("Enter 'y' to continue.");
+
+  // Read 1 char to confirm that one read the info, discard other characters.
+  char c = fgetc(stdin);
+  fflush(stdin);
+
+  return c == 'y';
+}
+
 int main()
 {
   // Initialize game variables.
-  // _Bool turn_is_player1 = true;
-  // char game_piece = PLAYER_1_PIECE;
-  // char game_winner = BLANK_CELL;
-  // int chosen_column = 0;
+  _Bool turn_is_player1 = true;
+  char game_piece = PLAYER_1_PIECE;
+  char game_winner = BLANK_CELL;
+  int chosen_column = 0;
 
   // Initialize special objects and setup exit handler in case.
   if (!Game_Initialize())
@@ -61,7 +79,11 @@ int main()
     atexit(Game_Cleanup); // This function will be called when the game ends!
   }
 
-  // Run loop with Game calls: try out render function!
+  // Confirm game info to continue...
+  if (!Game_Intro())
+    return 0;
+
+  // Run game loop.
   while (1)
   {
     Renderer_drawAll(Game_Drawer);
