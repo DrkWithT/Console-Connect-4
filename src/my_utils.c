@@ -14,5 +14,7 @@ void console_clear_color() { printf(RESET_COLOR_MODE); }
 void console_clear_all()
 {
   printf(CLEAR_SCR_SEQ); // erase all text
+  printf(RESET_COLOR_MODE);
   printf(RESET_CUR_SEQ); // restore cursor to top left
+  printf(RESET_COLOR_MODE);
 }

@@ -9,9 +9,9 @@
 // ANSI CTRL for defaulting color
 #define RESET_COLOR_MODE "\033[0m"
 
-#define CLEAR_SCR_SEQ "\033[2J;1;1H\033[0m"
+#define CLEAR_SCR_SEQ "\033[2J"
 
-#define RESET_CUR_SEQ "\033[1;1H\033[0m"
+#define RESET_CUR_SEQ "\033[1;1H"
 
 // Start info is green.
 #define C4_INFO_COLOR 32
