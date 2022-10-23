@@ -173,7 +173,7 @@ _Bool Board_checkVerticalsAt(Board *self, int row_idx, int col_idx)
   {
     char tmp = self->cell_data[tmp_idx];
 
-    if (tmp == prev)
+    if (tmp != BLANK_CELL && tmp == prev)
       count++;
     else
       count = 0;
@@ -297,15 +297,15 @@ _Bool Board_checkDiagonalFrom(Board *self, int row_idx, int col_idx, int row_ste
     prev = tmp;
   }
 
-  return count >= 3; // todo
+  return count >= 3;
 }
 
-_Bool Board_hasWinner(Board *self, int row_idx, int col_idx)
+_Bool Board_hasWinner(Board *self, int row_idx, int col_idx) // todo: fix checks for diagonals??
 {
   return Board_checkVerticalsAt(self, row_idx, col_idx)
-  || Board_checkHorizontalsAt(self, row_idx, col_idx)
-  || Board_checkDiagonalFrom(self, row_idx, col_idx, -1, -1) // top left diagonal
-  || Board_checkDiagonalFrom(self, row_idx, col_idx, -1, 1)  // top right diagonal
-  || Board_checkDiagonalFrom(self, row_idx, col_idx, 1, 1)   // bottom right diagonal
-  || Board_checkDiagonalFrom(self, row_idx, col_idx, 1, -1); // bottom left diagonal
+  || Board_checkHorizontalsAt(self, row_idx, col_idx);
+  // || Board_checkDiagonalFrom(self, row_idx, col_idx, -1, -1) // top left diagonal
+  // || Board_checkDiagonalFrom(self, row_idx, col_idx, -1, 1)  // top right diagonal
+  // || Board_checkDiagonalFrom(self, row_idx, col_idx, 1, 1)   // bottom right diagonal
+  // || Board_checkDiagonalFrom(self, row_idx, col_idx, 1, -1); // bottom left diagonal
 }
