@@ -4,6 +4,8 @@
 ### Summary:
 This is a fully-blown fork of the original repo "connectFour" by _"gskapoor"_. The codebase here is for a console version of the popular Connect 4 game. However, there _might_ be a few bugs. I will work on this in my leisure time.
 
+Winner checking logic is work in progress. The diagonal checker function is still being tested.
+
 ### How To Run: (Only Linux / WSL / possibly MacOS)
  - Download / Clone this Repo. Move around this folder to wherever you'd like.
  - Run `make all` to build the program.
