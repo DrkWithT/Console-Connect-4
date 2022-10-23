@@ -94,4 +94,5 @@ void Renderer_drawAll(const Renderer *self)
   }
   
   printf("\n");
+  console_clear_color();
 }
