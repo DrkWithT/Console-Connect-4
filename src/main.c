@@ -17,17 +17,11 @@
  * oooOOox
  */
 
-/// User input buffer size:
-#define INPUT_BUF_SIZE 4
-
 static Board *Game_Board = NULL;
 static Renderer *Game_Drawer;
-static char Input_Buffer[INPUT_BUF_SIZE];
 
 _Bool Game_Initialize()
 {
-  memset(Input_Buffer, '\0', INPUT_BUF_SIZE);
-
   Game_Board = Board_Constr(DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS);
 
   if (!Game_Board)
@@ -61,31 +55,21 @@ _Bool Game_Intro()
 
   // Read 1 char to confirm that one read the info, discard other characters.
   char c = fgetc(stdin);
-  fflush(stdin);
 
   return c == 'y';
 }
 
-void Game_Prompt_User(int player_num, char *input_buf, int buf_size)
+int Game_Prompt_User(int player_num)
 {
   // show prompt
   printf("P%i, enter your column: ", player_num);
 
-  // get input with finite length and null terminator
-  fgets(input_buf, 1, stdin);
-  input_buf[buf_size - 1] = '\0';
-}
+  int temp_col = -1; // probably default to the last ASCII char?
 
-int Game_Atoi(const char *input_buf)
-{
-  int temp = atoi(input_buf);
+  // get input with finite length and null terminator:
+  scanf("%i", &temp_col);
 
-  if (input_buf[0] == '0')
-    temp = 0;
-  else if (temp == 0)
-    temp = -1; // default conversion for NaN literals!
-  
-  return temp;
+  return temp_col;
 }
 
 _Bool Game_Validate_Input(int col_num)
@@ -140,9 +124,7 @@ int main()
   {
     Renderer_drawAll(Game_Drawer); // draw board
 
-    Game_Prompt_User(player_number, Input_Buffer, INPUT_BUF_SIZE);
-
-    chosen_column = Game_Atoi(Input_Buffer); // convert input string to column index or -1
+    chosen_column = Game_Prompt_User(player_number);
 
     if (Game_Validate_Input(chosen_column))
     {
