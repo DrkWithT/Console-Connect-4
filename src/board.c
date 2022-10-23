@@ -126,7 +126,7 @@ _Bool Board_putPiece(Board *self, int col_idx, char c)
           {
             self->cell_data[data_idx] = c;
             self->last_col = col_idx;
-            self->last_row = 0;
+            self->last_row = i;
 
             self->fill_count++; // on successful move: update fill count!
           }
