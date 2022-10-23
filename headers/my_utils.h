@@ -13,6 +13,9 @@
 
 #define RESET_CUR_SEQ "\033[1;1H\033[0m"
 
+// Start info is green.
+#define C4_INFO_COLOR 32
+
 // Player 1 is red
 #define P1_CELL_COLOR 31
 
