@@ -88,9 +88,9 @@ int Game_Atoi(const char *input_buf)
   return temp;
 }
 
-inline _Bool Game_Validate_Input(int col_num)
+_Bool Game_Validate_Input(int col_num)
 {
-  return col_num >= 0 && col_num < Game_Board->cols;
+  return col_num >= 0 && col_num < Board_getCols(Game_Board);
 }
 
 void Game_Say_Winner(char player_piece)

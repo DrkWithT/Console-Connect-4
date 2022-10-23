@@ -33,6 +33,8 @@ Board *Board_Constr(int rowc, int colc);
 
 void Board_Destr(Board *self);
 
+int Board_getCols(const Board *self);
+
 _Bool Board_canUse(const Board *self);
 
 int Board_getCellCount(Board *self);

@@ -66,6 +66,11 @@ void Board_Destr(Board *self)
   }
 }
 
+int Board_getCols(const Board *self)
+{
+  return self->cols;
+}
+
 _Bool Board_canUse(const Board *self)
 {
   return self->cell_data != NULL;
