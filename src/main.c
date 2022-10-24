@@ -5,7 +5,9 @@
  * @file main.c
  * @brief Driver code for my Connect 4 fork. :)
  * @authors DrkWithT (Forker), gskapoor (Original)
- * @version 0.1.0 Added basic checking logic.
+ * @version 0.1.2 Fixed general game loop logic, tried to fix diagonal win checks.
+ * 
+ * @note See the README for more details.
  */
 
 /**
