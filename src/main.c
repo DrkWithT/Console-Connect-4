@@ -134,17 +134,20 @@ int main()
       if (!move_ok)
       {
         puts("This column is full!");
+        player_number = -1;
         break;
       }
+
+      if (Board_hasWinner(Game_Board, move_row, move_col)) break;
+
+      if (Board_isFull(Game_Board)) break;
     }
     else
     {
+      puts("Invalid move!"); // handle invalid column input!
       player_number = -1;
-      break; // treat invalid cols as quitting!
-    }
-
-    if (Board_hasWinner(Game_Board, move_row, move_col))
       break;
+    }
 
     // Toggle current player and piece.
     if (player_number == 1)
