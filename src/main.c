@@ -5,6 +5,7 @@
  * @file main.c
  * @brief Driver code for my Connect 4 fork. :)
  * @authors DrkWithT (Forker), gskapoor (Original)
+ * @version 0.1.0 Added basic checking logic.
  */
 
 /**
@@ -54,7 +55,7 @@ _Bool Game_Intro()
   printf("Enter 'y' to continue.");
 
   // Read 1 char to confirm that one read the info, discard other characters.
-  char c = fgetc(stdin);
+  char c = fgetc(stdin); // TODO: handle possible input overflow?
 
   return c == 'y';
 }
@@ -118,7 +119,7 @@ int main()
     return 0;
 
   // Run game loop.
-  while (1)
+  while (true)
   {
     Renderer_drawAll(Game_Drawer); // draw board
 
@@ -158,6 +159,8 @@ int main()
     }
   }
 
+  // show board and print winner at last!
+  Renderer_drawAll(Game_Drawer);
   Game_Say_Winner(player_number);
 
   return 0;
